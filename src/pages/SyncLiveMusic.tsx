@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Cloud, Smartphone, RefreshCw, Wifi, Play, Pause, SkipForward, SkipBack, Music, LogOut } from 'lucide-react';
-import { auth, db } from '../lib/firebase';
+import { auth, db, storage } from '../lib/firebase';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
-import { doc, onSnapshot, Timestamp, setDoc, collection } from 'firebase/firestore';
+import { doc, onSnapshot, Timestamp, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { ref, getDownloadURL } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
 
 interface PlaybackState {
@@ -14,6 +15,12 @@ interface PlaybackState {
   position: number; // milliseconds
   isPlaying: boolean;
   updatedAt: Timestamp;
+}
+
+interface CloudSongMetadata {
+  title: string;
+  artist: string;
+  storagePath: string;
 }
 
 export const SyncLiveMusic = () => {

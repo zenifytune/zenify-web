@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../lib/firebase';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { onAuthStateChanged, type User } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { motion } from 'framer-motion';
 import { Check, Crown, Zap, Star, Shield, Smartphone } from 'lucide-react';
