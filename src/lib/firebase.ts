@@ -9,7 +9,7 @@ const firebaseConfig = {
   projectId: "zenify-7168a",
   storageBucket: "zenify-7168a.appspot.com",
   messagingSenderId: "473065268076", 
-  appId: "1:473065268076:web:..." 
+  appId: "1:473065268076:web:a1b2c3d4e5f6" 
 };
 
 const app = initializeApp(firebaseConfig);
