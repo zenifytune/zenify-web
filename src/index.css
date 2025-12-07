@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@theme {
+  --color-zen-50: #f0fdfa;
+  --color-zen-100: #ccfbf1;
+  --color-zen-200: #99f6e4;
+  --color-zen-300: #5eead4;
+  --color-zen-400: #2dd4bf;
+  --color-zen-500: #14b8a6;
+  --color-zen-600: #0d9488;
+  --color-zen-700: #0f766e;
+  --color-zen-800: #115e59;
+  --color-zen-900: #134e4a;
+  --color-zen-950: #042f2e;
+
+  --color-dark-bg: #0a0a0a;
+  --color-dark-card: #171717;
+  --color-dark-text: #ededed;
+  --color-dark-muted: #a1a1aa;
+
+  --animate-blob: blob 7s infinite;
+  --animate-fade-in: fadeIn 0.5s ease-out forwards;
+  --animate-slide-up: slideUp 0.5s ease-out forwards;
+
+  @keyframes blob {
+    0% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+    100% { transform: translate(0px, 0px) scale(1); }
+  }
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  @keyframes slideUp {
+    0% { transform: translateY(20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+  }
+
+  body {
+    @apply bg-dark-bg text-dark-text antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  html.lenis, html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/5 backdrop-blur-lg border border-white/10;
+  }
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-zen-400 to-purple-500;
+  }
+}
