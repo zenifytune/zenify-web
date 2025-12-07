@@ -157,6 +157,22 @@ export const Subscription = () => {
             >
               Go to Web Player
             </button>
+            
+            <button 
+              onClick={async () => {
+                if (user && confirm('Reset subscription for testing?')) {
+                  await setDoc(doc(db, 'users', user.uid), { 
+                    isSubscribed: false,
+                    plan: null 
+                  }, { merge: true });
+                  setIsSubscribed(false);
+                  setSelectedPlan('Monthly Premium');
+                }
+              }}
+              className="mt-4 text-sm text-red-400 hover:text-red-300 underline decoration-dashed"
+            >
+              Reset Subscription (Test Mode)
+            </button>
           </motion.div>
         ) : (
           <div className="grid lg:grid-cols-3 gap-8">
