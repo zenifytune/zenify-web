@@ -5,7 +5,7 @@ import { cn } from '../lib/utils';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../lib/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import logo from '../assets/logo.svg'; // Import the logo
+import logo from '../assets/ic_launcher.png'; // Updated import
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);

@@ -3,15 +3,52 @@ import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../lib/firebase';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { motion } from 'framer-motion';
-import { Check, Crown, Zap, Star, Shield, Smartphone } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Check, Crown, Zap, Shield, Smartphone, CreditCard, Loader2, X } from 'lucide-react';
 
 export const Subscription = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedPlan, setSelectedPlan] = useState<string>('Monthly Premium');
+  const [showCheckout, setShowCheckout] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  
   const navigate = useNavigate();
+
+  const plans = [
+    {
+      id: 'mini',
+      name: 'Mini Plan',
+      price: '₹9.99',
+      period: '2 Days',
+      features: ['Ad-free music', 'Offline Playback', 'Limited downloads'],
+      color: 'from-blue-400 to-blue-600',
+      border: 'border-blue-500/30',
+      bg: 'bg-blue-500/10'
+    },
+    {
+      id: 'weekly',
+      name: 'Weekly Premium',
+      price: '₹19.99',
+      period: 'Week',
+      features: ['Unlimited downloads', 'Offline Playback', 'High Quality Audio', 'Ad-free'],
+      color: 'from-purple-400 to-purple-600',
+      border: 'border-purple-500/30',
+      bg: 'bg-purple-500/10'
+    },
+    {
+      id: 'monthly',
+      name: 'Monthly Premium',
+      price: '₹29.99',
+      period: 'Month',
+      features: ['Everything in Weekly', 'Best Value', 'Cancel anytime', 'Priority Support'],
+      color: 'from-zen-400 to-zen-600',
+      border: 'border-zen-500/50',
+      bg: 'bg-zen-500/10',
+      isRecommended: true
+    }
+  ];
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -36,55 +73,52 @@ export const Subscription = () => {
       navigate('/login');
       return;
     }
-
-    setIsProcessing(true);
-
-    // Simulate Payment Processing Delay
-    setTimeout(async () => {
-      try {
-        // Link subscription to the user's account/email
-        await setDoc(doc(db, 'users', user.uid), {
-          isSubscribed: true,
-          email: user.email,
-          updatedAt: new Date().toISOString(),
-          plan: 'premium_monthly'
-        }, { merge: true });
-
-        setIsSubscribed(true);
-        setIsProcessing(false);
-      } catch (e) {
-        console.error("Subscription error:", e);
-        setIsProcessing(false);
-        alert("An error occurred. Please try again.");
-      }
-    }, 1500);
+    setShowCheckout(true);
   };
 
-  const features = [
-    "Ad-free listening experience",
-    "High-quality audio streaming",
-    "Unlimited offline downloads",
-    "Cross-platform sync (Web, Android, iOS)",
-    "AI-powered recommendations"
-  ];
+  const confirmPayment = async () => {
+    setIsProcessing(true);
+    
+    // Simulate Payment Processing
+    setTimeout(async () => {
+      try {
+        if (user) {
+          await setDoc(doc(db, 'users', user.uid), {
+            isSubscribed: true,
+            email: user.email,
+            updatedAt: new Date().toISOString(),
+            plan: selectedPlan
+          }, { merge: true });
+          
+          setIsSubscribed(true);
+          setShowCheckout(false);
+        }
+      } catch (e) {
+        console.error("Payment error:", e);
+        alert("Payment failed. Please try again.");
+      } finally {
+        setIsProcessing(false);
+      }
+    }, 2000);
+  };
 
   if (isLoading) {
     return (
       <div className="min-h-screen bg-dark-bg flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-zen-500 border-t-transparent rounded-full animate-spin" />
+        <Loader2 className="w-8 h-8 text-zen-500 animate-spin" />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-dark-bg pt-24 pb-12 px-4 relative overflow-hidden">
-      {/* Background Effects */}
+      {/* Ambient Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-zen-500/10 rounded-full blur-[120px]" />
+        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-zen-500/5 rounded-full blur-[120px]" />
       </div>
 
-      <div className="max-w-4xl mx-auto relative z-10">
-        <div className="text-center mb-12">
+      <div className="max-w-6xl mx-auto relative z-10">
+        <div className="text-center mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -94,122 +128,180 @@ export const Subscription = () => {
             Zenify Premium
           </motion.div>
           
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-4xl md:text-6xl font-bold text-white mb-6"
-          >
-            Unlock the Full <br />
-            <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-600">Experience</span>
-          </motion.h1>
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+            Choose Your <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-600">Perfect Plan</span>
+          </h1>
           
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-xl text-gray-400 max-w-2xl mx-auto"
-          >
-            Take your music library to the next level with premium features designed for the ultimate listener.
-          </motion.p>
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+            Unlock ad-free music, high-quality streaming, and unlimited downloads.
+          </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          {/* Features List */}
+        {isSubscribed ? (
           <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-            className="space-y-6"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="max-w-md mx-auto glass p-12 rounded-3xl text-center border border-zen-500/30"
           >
-            {features.map((feature, index) => (
-              <div key={index} className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
-                <div className="w-10 h-10 rounded-full bg-zen-500/20 flex items-center justify-center shrink-0">
-                  <Check className="w-5 h-5 text-zen-400" />
-                </div>
-                <span className="text-gray-200 font-medium">{feature}</span>
-              </div>
-            ))}
-          </motion.div>
-
-          {/* Pricing Card */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.4 }}
-            className="relative"
-          >
-            <div className="absolute -inset-1 bg-gradient-to-r from-amber-500 to-orange-600 rounded-3xl blur opacity-30" />
-            <div className="relative glass p-8 rounded-3xl border border-amber-500/20">
-              
-              {isSubscribed ? (
-                <div className="text-center py-12">
-                  <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Check className="w-10 h-10 text-green-500" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white mb-2">You're Premium!</h3>
-                  <p className="text-gray-400 mb-8">Your subscription is active and linked to <br/><span className="text-white font-medium">{user?.email}</span></p>
-                  <button 
-                    onClick={() => navigate('/sync-live')}
-                    className="w-full py-4 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold transition-all border border-white/10"
-                  >
-                    Go to Player
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <div className="flex justify-between items-start mb-8">
-                    <div>
-                      <h3 className="text-2xl font-bold text-white">Monthly Plan</h3>
-                      <p className="text-gray-400">Cancel anytime</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-3xl font-bold text-white">$9.99</div>
-                      <div className="text-sm text-gray-500">/month</div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4 mb-8">
-                    <div className="flex items-center gap-3 text-sm text-gray-300">
-                      <Zap className="w-4 h-4 text-amber-400" />
-                      <span>Instant activation</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm text-gray-300">
-                      <Shield className="w-4 h-4 text-amber-400" />
-                      <span>Secure payment via Zenify</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm text-gray-300">
-                      <Smartphone className="w-4 h-4 text-amber-400" />
-                      <span>Access on all devices</span>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={handleSubscribe}
-                    disabled={isProcessing}
-                    className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl font-bold text-lg hover:opacity-90 transition-all shadow-lg shadow-orange-500/20 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isProcessing ? (
-                      <span className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    ) : (
-                      <>
-                        <Star className="w-5 h-5 fill-current" />
-                        Subscribe Now
-                      </>
-                    )}
-                  </button>
-                  
-                  {!user && (
-                    <p className="text-center mt-4 text-sm text-gray-500">
-                      You'll be asked to log in first.
-                    </p>
-                  )}
-                </>
-              )}
+            <div className="w-24 h-24 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Check className="w-12 h-12 text-green-500" />
             </div>
+            <h2 className="text-3xl font-bold text-white mb-4">Premium Active</h2>
+            <p className="text-gray-400 mb-8">
+              You are currently subscribed to the <span className="text-white font-bold">{selectedPlan}</span>. 
+              Enjoy your music without limits!
+            </p>
+            <button 
+              onClick={() => navigate('/sync-live')}
+              className="w-full py-4 bg-zen-600 hover:bg-zen-700 text-white rounded-xl font-bold transition-colors"
+            >
+              Go to Web Player
+            </button>
           </motion.div>
-        </div>
+        ) : (
+          <div className="grid lg:grid-cols-3 gap-8">
+            {plans.map((plan, index) => (
+              <motion.div
+                key={plan.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                onClick={() => setSelectedPlan(plan.name)}
+                className={`relative p-8 rounded-3xl glass border transition-all duration-300 cursor-pointer group hover:-translate-y-2 ${
+                  selectedPlan === plan.name 
+                    ? `ring-2 ring-offset-2 ring-offset-dark-bg ${plan.border} bg-white/5` 
+                    : 'border-white/5 hover:border-white/10'
+                }`}
+              >
+                {plan.isRecommended && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-zen-500 to-zen-600 text-white text-xs font-bold rounded-full shadow-lg shadow-zen-500/20">
+                    MOST POPULAR
+                  </div>
+                )}
+
+                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${plan.color} flex items-center justify-center mb-6 shadow-lg`}>
+                  <Crown className="w-6 h-6 text-white" />
+                </div>
+
+                <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
+                <div className="flex items-baseline gap-1 mb-6">
+                  <span className="text-4xl font-bold text-white">{plan.price}</span>
+                  <span className="text-gray-400">/{plan.period}</span>
+                </div>
+
+                <ul className="space-y-4 mb-8">
+                  {plan.features.map((feature, i) => (
+                    <li key={i} className="flex items-start gap-3 text-gray-300">
+                      <Check className={`w-5 h-5 shrink-0 ${selectedPlan === plan.name ? 'text-white' : 'text-gray-500'}`} />
+                      <span className="text-sm">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  className={`w-full py-4 rounded-xl font-bold transition-all ${
+                    selectedPlan === plan.name
+                      ? `bg-gradient-to-r ${plan.color} text-white shadow-lg`
+                      : 'bg-white/10 text-white hover:bg-white/20'
+                  }`}
+                >
+                  {selectedPlan === plan.name ? 'Selected' : 'Choose Plan'}
+                </button>
+              </motion.div>
+            ))}
+          </div>
+        )}
+
+        {!isSubscribed && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="mt-12 text-center"
+          >
+            <button
+              onClick={handleSubscribe}
+              className="px-12 py-4 bg-white text-dark-bg rounded-full font-bold text-lg hover:bg-gray-200 transition-all shadow-xl shadow-white/10 hover:scale-105 active:scale-95"
+            >
+              Proceed to Payment
+            </button>
+            <p className="mt-4 text-sm text-gray-500 flex items-center justify-center gap-2">
+              <Shield className="w-4 h-4" /> Secure payment powered by Zenify Pay
+            </p>
+          </motion.div>
+        )}
       </div>
+
+      {/* Checkout Modal */}
+      <AnimatePresence>
+        {showCheckout && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+              onClick={() => setShowCheckout(false)}
+            />
+            
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="glass relative w-full max-w-md p-8 rounded-3xl border border-white/10 shadow-2xl bg-dark-card"
+            >
+              <button 
+                onClick={() => setShowCheckout(false)}
+                className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded-full transition-colors"
+              >
+                <X className="w-5 h-5 text-gray-400" />
+              </button>
+
+              <h2 className="text-2xl font-bold text-white mb-6">Checkout</h2>
+              
+              <div className="space-y-4 mb-8">
+                <div className="p-4 bg-white/5 rounded-xl border border-white/5 flex justify-between items-center">
+                  <div>
+                    <p className="text-sm text-gray-400">Selected Plan</p>
+                    <p className="font-bold text-white">{selectedPlan}</p>
+                  </div>
+                  <Crown className="w-6 h-6 text-amber-400" />
+                </div>
+
+                <div className="p-4 bg-white/5 rounded-xl border border-white/5">
+                  <p className="text-sm text-gray-400 mb-3">Payment Method</p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-6 bg-white/10 rounded flex items-center justify-center">
+                      <CreditCard className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-white">•••• •••• •••• 4242</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <p className="text-sm text-gray-400">Total</p>
+                  <p className="text-2xl font-bold text-white">
+                    {plans.find(p => p.name === selectedPlan)?.price}
+                  </p>
+                </div>
+                <button
+                  onClick={confirmPayment}
+                  disabled={isProcessing}
+                  className="flex-1 bg-zen-500 hover:bg-zen-600 text-white rounded-xl font-bold transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isProcessing ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    "Confirm & Pay"
+                  )}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

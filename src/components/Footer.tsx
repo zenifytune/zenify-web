@@ -1,5 +1,5 @@
 import { Github, Twitter, Instagram } from 'lucide-react';
-import logo from '../assets/logo.svg';
+import logo from '../assets/ic_launcher.png';
 
 export const Footer = () => {
   return (
