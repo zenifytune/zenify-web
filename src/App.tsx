@@ -5,7 +5,8 @@ import { Home } from './pages/Home';
 import { ResetPassword } from './pages/ResetPassword';
 import { SyncLiveMusic } from './pages/SyncLiveMusic';
 import { Login } from './pages/Login';
-import { Subscription } from './pages/Subscription'; // NEW IMPORT
+import { Subscription } from './pages/Subscription';
+import { Account } from './pages/Account'; // NEW IMPORT
 import { SmoothScroll } from './components/SmoothScroll';
 
 function App() {
@@ -19,9 +20,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/sync-live" element={<SyncLiveMusic />} />
-          <Route path="/subscription" element={<Subscription />} /> {/* NEW ROUTE */}
+          <Route path="/subscription" element={<Subscription />} />
+          <Route path="/account" element={<Account />} /> {/* NEW ROUTE */}
           {/* Default handler for firebase auth action redirect if configured to /action or similar */}
-          <Route path="/auth/action" element={<ResetPassword />} /> 
+          <Route path="/auth/action" element={<ResetPassword />} />
         </Routes>
         <Footer />
       </div>

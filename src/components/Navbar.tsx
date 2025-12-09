@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
-import { Menu, X, RefreshCw, LogIn, Crown } from 'lucide-react'; // Removed Music
+import { Menu, X, RefreshCw, LogIn, Crown, User as UserIcon } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../lib/firebase';
@@ -81,7 +81,7 @@ export const Navbar = () => {
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-zen-400 transition-all group-hover:w-full" />
                 </button>
               ))}
-              
+
               <Link to="/subscription">
                 <button className="flex items-center gap-2 text-amber-400 hover:text-amber-300 text-sm font-bold transition-colors px-3 py-2 rounded-lg hover:bg-amber-500/10">
                   <Crown className="w-4 h-4" />
@@ -98,20 +98,23 @@ export const Navbar = () => {
 
               {user ? (
                 <div className="flex items-center gap-4">
-                    <span className="text-sm text-gray-400">{user.email?.split('@')[0]}</span>
-                    <button 
-                        onClick={handleLogout}
-                        className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full text-sm font-bold transition-colors"
-                    >
-                        Logout
-                    </button>
+                  <Link to="/account" className="flex items-center gap-2 hover:bg-white/5 py-1 px-3 rounded-full transition-colors">
+                    <div className="w-8 h-8 rounded-full bg-zen-500/20 flex items-center justify-center border border-zen-500/30">
+                      {user.photoURL ? (
+                        <img src={user.photoURL} alt="Profile" className="w-full h-full rounded-full object-cover" />
+                      ) : (
+                        <span className="text-xs font-bold text-zen-400">{user.email?.charAt(0).toUpperCase()}</span>
+                      )}
+                    </div>
+                    <span className="text-sm font-medium text-gray-200">{user.displayName?.split(' ')[0] || 'Account'}</span>
+                  </Link>
                 </div>
               ) : (
                 <Link to="/login">
-                    <button className="bg-white text-dark-bg px-4 py-2 rounded-full text-sm font-bold hover:bg-zen-50 transition-colors flex items-center gap-2">
-                        <LogIn className="w-4 h-4" />
-                        Login
-                    </button>
+                  <button className="bg-white text-dark-bg px-4 py-2 rounded-full text-sm font-bold hover:bg-zen-50 transition-colors flex items-center gap-2">
+                    <LogIn className="w-4 h-4" />
+                    Login
+                  </button>
                 </Link>
               )}
             </div>
@@ -147,35 +150,43 @@ export const Navbar = () => {
                 {link.name}
               </button>
             ))}
-             <Link to="/subscription" onClick={() => setIsMobileMenuOpen(false)}>
-                <button className="w-full mt-2 flex items-center justify-center gap-2 bg-amber-500/10 text-amber-400 border border-amber-500/20 px-4 py-2 rounded-lg text-sm font-bold">
-                    <Crown className="w-4 h-4" />
-                    Go Premium
-                </button>
-             </Link>
+            <Link to="/subscription" onClick={() => setIsMobileMenuOpen(false)}>
+              <button className="w-full mt-2 flex items-center justify-center gap-2 bg-amber-500/10 text-amber-400 border border-amber-500/20 px-4 py-2 rounded-lg text-sm font-bold">
+                <Crown className="w-4 h-4" />
+                Go Premium
+              </button>
+            </Link>
 
-             <Link to="/sync-live" onClick={() => setIsMobileMenuOpen(false)}>
-                <button className="w-full mt-2 flex items-center justify-center gap-2 bg-white text-dark-bg px-4 py-2 rounded-lg text-sm font-bold">
-                    <RefreshCw className="w-4 h-4" />
-                    Sync Live Music
-                </button>
-             </Link>
+            <Link to="/sync-live" onClick={() => setIsMobileMenuOpen(false)}>
+              <button className="w-full mt-2 flex items-center justify-center gap-2 bg-white text-dark-bg px-4 py-2 rounded-lg text-sm font-bold">
+                <RefreshCw className="w-4 h-4" />
+                Sync Live Music
+              </button>
+            </Link>
 
-             {user ? (
-                <button 
-                    onClick={handleLogout}
-                    className="w-full mt-4 bg-red-500/10 text-red-400 border border-red-500/20 px-4 py-2 rounded-lg text-sm font-bold flex items-center justify-center gap-2"
-                >
-                    Logout ({user.email?.split('@')[0]})
-                </button>
-             ) : (
-                <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                    <button className="w-full mt-4 bg-zen-500 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center justify-center gap-2">
-                        <LogIn className="w-4 h-4" />
-                        Login
-                    </button>
+            {user ? (
+              <>
+                <Link to="/account" onClick={() => setIsMobileMenuOpen(false)}>
+                  <button className="w-full mt-4 bg-white/10 text-white border border-white/20 px-4 py-2 rounded-lg text-sm font-bold flex items-center justify-center gap-2">
+                    <UserIcon className="w-4 h-4" />
+                    My Account
+                  </button>
                 </Link>
-             )}
+                <button
+                  onClick={handleLogout}
+                  className="w-full mt-2 bg-red-500/10 text-red-400 border border-red-500/20 px-4 py-2 rounded-lg text-sm font-bold flex items-center justify-center gap-2"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                <button className="w-full mt-4 bg-zen-500 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center justify-center gap-2">
+                  <LogIn className="w-4 h-4" />
+                  Login
+                </button>
+              </Link>
+            )}
           </div>
         </motion.div>
       )}

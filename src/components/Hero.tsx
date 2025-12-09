@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion';
 import { Play, Download, Music } from 'lucide-react';
+import HeroAnimation from './3d/HeroAnimation';
 
 export const Hero = () => {
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Background Elements */}
+      <HeroAnimation />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-500/20 rounded-full blur-[120px] animate-blob" />
         <div className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-zen-500/20 rounded-full blur-[120px] animate-blob animation-delay-2000" />
@@ -35,9 +37,9 @@ export const Hero = () => {
             Experience Music <br />
             <span className="text-gradient">Like Never Before</span>
           </h1>
-          
+
           <p className="text-lg text-gray-400 mb-8 max-w-lg leading-relaxed">
-            Zenify brings your local library to life with stunning visualizations, 
+            Zenify brings your local library to life with stunning visualizations,
             smart organization, and a seamless cross-platform experience.
           </p>
 
@@ -50,7 +52,7 @@ export const Hero = () => {
               <Download className="w-5 h-5" />
               Download Now
             </motion.button>
-            
+
             <motion.button
               whileHover={{ scale: 1.05, transition: { type: "spring", stiffness: 400, damping: 10 } }}
               whileTap={{ scale: 0.95 }}
@@ -85,43 +87,43 @@ export const Hero = () => {
             <div className="h-[46px] w-[3px] bg-gray-800 absolute -start-[17px] top-[178px] rounded-s-lg"></div>
             <div className="h-[64px] w-[3px] bg-gray-800 absolute -end-[17px] top-[142px] rounded-e-lg"></div>
             <div className="rounded-[2rem] overflow-hidden w-full h-full bg-dark-bg relative">
-                {/* Mock UI Content */}
-                <div className="p-6 pt-12 h-full flex flex-col">
-                    <div className="flex justify-between items-center mb-8">
-                        <div className="w-8 h-8 rounded-full bg-white/10"></div>
-                        <div className="text-white font-bold">Now Playing</div>
-                        <div className="w-8 h-8 rounded-full bg-white/10"></div>
-                    </div>
-                    <div className="w-full aspect-square bg-gradient-to-tr from-zen-500 to-purple-600 rounded-2xl mb-8 shadow-2xl shadow-zen-500/20 animate-pulse"></div>
-                    <div className="space-y-2 mb-8">
-                        <div className="h-6 w-3/4 bg-white/20 rounded"></div>
-                        <div className="h-4 w-1/2 bg-white/10 rounded"></div>
-                    </div>
-                    <div className="flex justify-between items-center mt-auto mb-8">
-                         <div className="w-8 h-8 bg-white/10 rounded-full"></div>
-                         <div className="w-16 h-16 bg-zen-500 rounded-full flex items-center justify-center shadow-lg shadow-zen-500/40">
-                            <Play className="fill-white text-white ml-1" />
-                         </div>
-                         <div className="w-8 h-8 bg-white/10 rounded-full"></div>
-                    </div>
+              {/* Mock UI Content */}
+              <div className="p-6 pt-12 h-full flex flex-col">
+                <div className="flex justify-between items-center mb-8">
+                  <div className="w-8 h-8 rounded-full bg-white/10"></div>
+                  <div className="text-white font-bold">Now Playing</div>
+                  <div className="w-8 h-8 rounded-full bg-white/10"></div>
                 </div>
+                <div className="w-full aspect-square bg-gradient-to-tr from-zen-500 to-purple-600 rounded-2xl mb-8 shadow-2xl shadow-zen-500/20 animate-pulse"></div>
+                <div className="space-y-2 mb-8">
+                  <div className="h-6 w-3/4 bg-white/20 rounded"></div>
+                  <div className="h-4 w-1/2 bg-white/10 rounded"></div>
+                </div>
+                <div className="flex justify-between items-center mt-auto mb-8">
+                  <div className="w-8 h-8 bg-white/10 rounded-full"></div>
+                  <div className="w-16 h-16 bg-zen-500 rounded-full flex items-center justify-center shadow-lg shadow-zen-500/40">
+                    <Play className="fill-white text-white ml-1" />
+                  </div>
+                  <div className="w-8 h-8 bg-white/10 rounded-full"></div>
+                </div>
+              </div>
             </div>
           </div>
-          
+
           {/* Floating Elements */}
-          <motion.div 
+          <motion.div
             animate={{ y: [0, -20, 0] }}
             transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
             className="absolute top-20 -right-10 p-4 glass rounded-2xl shadow-xl z-30"
           >
             <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
-                    <Music className="w-5 h-5 text-green-400" />
-                </div>
-                <div>
-                    <p className="text-xs text-gray-400">Now Playing</p>
-                    <p className="text-sm font-bold text-white">Midnight City</p>
-                </div>
+              <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                <Music className="w-5 h-5 text-green-400" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-400">Now Playing</p>
+                <p className="text-sm font-bold text-white">Midnight City</p>
+              </div>
             </div>
           </motion.div>
         </motion.div>
