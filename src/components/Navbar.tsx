@@ -28,7 +28,7 @@ export const Navbar = () => {
   const navLinks = [
     { name: 'Features', href: '/#features' },
     { name: 'Showcase', href: '/#showcase' },
-    { name: 'Download', href: '/#download' },
+    { name: 'Web Player', href: '/player' },
   ];
 
   const handleNavClick = (href: string) => {

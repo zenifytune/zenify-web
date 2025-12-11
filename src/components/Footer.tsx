@@ -1,56 +1,96 @@
-import { Github, Twitter, Instagram } from 'lucide-react';
-import logo from '../assets/ic_launcher.png';
+import { Github, Twitter, Mail, Music2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+const footerSections = [
+  {
+    title: 'Product',
+    links: [
+      { name: 'Features', href: '/#features' },
+      { name: 'Download', href: '/#download' },
+      { name: 'Updates', href: '#' },
+    ]
+  },
+  {
+    title: 'Company',
+    links: [
+      { name: 'About', href: '#' },
+      { name: 'Blog', href: '#' },
+      { name: 'Careers', href: '#' },
+    ]
+  },
+  {
+    title: 'Support',
+    links: [
+      { name: 'Help Center', href: 'mailto:support@zenify.app' },
+      { name: 'Privacy', href: '/privacy' },
+      { name: 'Terms', href: '/terms' },
+    ]
+  }
+];
 
 export const Footer = () => {
+  // Helper to determine if link is internal (route) or external
+  const renderLink = (link: { name: string; href: string }) => {
+    if (link.href.startsWith('/')) {
+      return (
+        <Link to={link.href} className="text-gray-400 hover:text-white transition-colors text-sm">
+          {link.name}
+        </Link>
+      );
+    }
+    return (
+      <a href={link.href} className="text-gray-400 hover:text-white transition-colors text-sm">
+        {link.name}
+      </a>
+    );
+  };
+
   return (
-    <footer className="border-t border-white/5 bg-dark-bg pt-16 pb-8">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+    <footer className="border-t border-white/5 bg-black/40 backdrop-blur-xl relative z-10">
+      <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-12">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <img src={logo} className="w-8 h-8 rounded-lg shadow-lg shadow-zen-500/20" alt="Zenify Logo" />
-              <span className="font-bold text-xl text-white">Zenify</span>
+              <Music2 className="w-8 h-8 text-purple-500" />
+              <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+                Zenify
+              </span>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">
-              The next generation music player for your local library. Visuals, speed, and style.
+              Experience music like never before.
+              Immersive 3D visuals, high-quality audio,
+              and seamless listening.
             </p>
           </div>
-          
-          <div>
-            <h3 className="text-white font-semibold mb-4">Product</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="#" className="hover:text-zen-400 transition-colors">Features</a></li>
-              <li><a href="#" className="hover:text-zen-400 transition-colors">Download</a></li>
-              <li><a href="#" className="hover:text-zen-400 transition-colors">Changelog</a></li>
-            </ul>
-          </div>
 
-          <div>
-            <h3 className="text-white font-semibold mb-4">Resources</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="#" className="hover:text-zen-400 transition-colors">Documentation</a></li>
-              <li><a href="#" className="hover:text-zen-400 transition-colors">Community</a></li>
-              <li><a href="#" className="hover:text-zen-400 transition-colors">Help Center</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-white font-semibold mb-4">Legal</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="#" className="hover:text-zen-400 transition-colors">Privacy</a></li>
-              <li><a href="#" className="hover:text-zen-400 transition-colors">Terms</a></li>
-            </ul>
-          </div>
+          {footerSections.map((section) => (
+            <div key={section.title}>
+              <h3 className="font-semibold text-white mb-4">{section.title}</h3>
+              <ul className="space-y-3">
+                {section.links.map((link) => (
+                  <li key={link.name}>
+                    {renderLink(link)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-500 text-sm">
-            © 2025 Zenify Music. All rights reserved.
+            © 2025 Zenify. All rights reserved.
           </p>
-          <div className="flex items-center gap-4 text-gray-400">
-            <a href="#" className="hover:text-white transition-colors"><Github className="w-5 h-5" /></a>
-            <a href="#" className="hover:text-white transition-colors"><Twitter className="w-5 h-5" /></a>
-            <a href="#" className="hover:text-white transition-colors"><Instagram className="w-5 h-5" /></a>
+          <div className="flex gap-6">
+            <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <Github className="w-5 h-5" />
+            </a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <Twitter className="w-5 h-5" />
+            </a>
+            <a href="mailto:contact@zenify.app" className="text-gray-400 hover:text-white transition-colors">
+              <Mail className="w-5 h-5" />
+            </a>
           </div>
         </div>
       </div>
